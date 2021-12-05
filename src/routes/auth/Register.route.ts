@@ -6,6 +6,7 @@ import { ApiResponseType } from "~/types/global";
 import { Static, Type } from "@sinclair/typebox";
 import { getSuccessResponseSchema } from "~/utils/typebox";
 import { setRefreshTokenInCookie } from "~/functions/token/setRefreshTokenInCookie";
+import { omitKeys } from "~/utils/objects";
 
 /** Typebox Schemas and Types */
 namespace TB {
@@ -65,7 +66,7 @@ namespace Router {
           ok: true,
           message: "Successfully Created User",
           data: isWebClient
-            ? { ...tokenCluster, refreshToken: undefined }
+            ? omitKeys(tokenCluster, ["refreshToken"])
             : tokenCluster,
         };
       }

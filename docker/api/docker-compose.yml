@@ -1,0 +1,41 @@
+# Spawns the API and its associated services in a docker container
+
+version: "3.9"
+services:
+  # The Main API service
+  api:
+    # Basics
+    image: authify
+    build: ../../
+
+    # Port Mapping
+    ports:
+      - ${PORT:-8000}:${PORT:-8000}
+
+    # Links
+    links:
+      - postgres
+
+    # Env Vars
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - PORT=${PORT:-8000}
+
+  # The Database
+  postgres:
+    # Basics
+    image: postgres
+
+    # Port Mapping
+    ports:
+      - "5432:5432"
+
+    # Volumes/Data Store
+    volumes:
+      - ../postgres-data:/var/lib/postgresql/data
+
+    # Env Vars
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}

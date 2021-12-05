@@ -1,0 +1,8 @@
+{
+    "scripts": {
+        "api:start": "cd api && docker-compose up -d --build",
+        "api:stop": "cd api && docker-compose down",
+        "services:start": "cd services && docker-compose up -d --build",
+        "services:stop": "cd services && docker-compose down"
+    }
+}

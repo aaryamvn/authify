@@ -1,0 +1,55 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model SocialConnection {
+  id                       String         @id @default(uuid())
+  createdAt                DateTime       @default(now())
+  updatedAt                DateTime       @updatedAt
+  provider                 SocialProvider
+  providerEmail            String
+  providerUsername         String
+  providerUserId           String
+  isRegistrationConnection Boolean
+  user                     User           @relation("SocialConnection_user", fields: [userId], references: [id])
+  userId                   String
+}
+
+model TokenCluster {
+  id           String   @id @default(uuid())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  accessToken  String   @unique
+  refreshToken String   @unique
+  user         User     @relation("TokenCluster_user", fields: [userId], references: [id])
+  userId       String
+}
+
+model User {
+  id                String             @id @default(uuid())
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  username          String             @unique
+  signupMethod      SignupMethod
+  isVerified        Boolean?
+  email             String             @unique
+  password          String?
+  socialConnections SocialConnection[] @relation("SocialConnection_user")
+  tokenClusters     TokenCluster[]     @relation("TokenCluster_user")
+}
+
+enum SignupMethod {
+  EMAIL
+  GOOGLE
+  TWITTER
+}
+
+enum SocialProvider {
+  GOOGLE
+  TWITTER
+}
